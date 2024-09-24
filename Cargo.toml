@@ -1,6 +1,6 @@
 [package]
-name = "square_fdw"
-version = "0.3.0"
+name = "wasm_fdw_example"
+version = "0.4.0"
 edition = "2021"
 
 [lib]
@@ -11,23 +11,8 @@ strip = "debuginfo"
 lto = true
 
 [dependencies]
-wit-bindgen-rt = "0.26.0" # WebAssembly Interface Types runtime
-serde_json = "1.0" # JSON parsing
-serde = { version = "1.0", features = ["derive"] } # Serde for serializing/deserializing JSON
-log = "0.4" # Logging
-env_logger = "0.10" # Environment-based logger setup
-
-# Updated reqwest for WebAssembly support
-reqwest = { version = "0.11", default-features = false, features = ["json", "wasm"] }
-
-# Tokio is not needed for WebAssembly since async runtime handling is different.
-# If you still need an async runtime in the future, wasm-bindgen or async-std are alternatives.
-
-# WebAssembly-specific dependencies
-wasm-bindgen = "0.2" # For Wasm bindings
-
-# Async runtime for WASM (alternative to tokio)
-futures = "0.3" # Async futures for WebAssembly
+wit-bindgen-rt = "0.26.0"
+serde_json = "1.0"
 
 [package.metadata.component]
 package = "reactix:square-fdw"
@@ -37,8 +22,3 @@ path = "wit"
 
 [package.metadata.component.target.dependencies]
 "supabase:wrappers" = { path = "./supabase-wrappers-wit" }
-
-[build-dependencies]
-wit-bindgen-cli = "0.26.0" # WIT CLI for Wasm
-
-
