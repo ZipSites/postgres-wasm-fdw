@@ -1,33 +1,44 @@
 [package]
-name = "square_fdw" # Name of your wrapper
-version = "0.2.0" # Initial version
-edition = "2021" # Rust edition
+name = "square_fdw"
+version = "0.3.0"
+edition = "2021"
 
 [lib]
-crate-type = ["cdylib"] # Required for WebAssembly library
+crate-type = ["cdylib"]
 
 [profile.release]
-strip = "debuginfo" # Strip debug info to reduce size
-lto = true # Enable Link Time Optimization for performance
+strip = "debuginfo"
+lto = true
 
 [dependencies]
-wit-bindgen-rt = "0.26.0" # Runtime for WebAssembly Interface Types (WIT)
-serde_json = "1.0" # JSON parsing for API response handling
-reqwest = { version = "0.11", features = ["blocking", "json"] } # HTTP client for API requests
-serde = { version = "1.0", features = ["derive"] } # For serializing/deserializing JSON
-tokio = { version = "1", features = ["full"] } # Async runtime, though `reqwest` is used in blocking mode here
-log = "0.4" # Logging for debugging purposes
+wit-bindgen-rt = "0.26.0" # WebAssembly Interface Types runtime
+serde_json = "1.0" # JSON parsing
+serde = { version = "1.0", features = ["derive"] } # Serde for serializing/deserializing JSON
+log = "0.4" # Logging
 env_logger = "0.10" # Environment-based logger setup
 
+# Updated reqwest for WebAssembly support
+reqwest = { version = "0.11", default-features = false, features = ["json", "wasm"] }
+
+# Tokio is not needed for WebAssembly since async runtime handling is different.
+# If you still need an async runtime in the future, wasm-bindgen or async-std are alternatives.
+
+# WebAssembly-specific dependencies
+wasm-bindgen = "0.2" # For Wasm bindings
+
+# Async runtime for WASM (alternative to tokio)
+futures = "0.3" # Async futures for WebAssembly
+
 [package.metadata.component]
-package = "reactix:square-fdw" # Namespaced identifier for your app
+package = "reactix:square-fdw"
 
 [package.metadata.component.target]
-path = "wit" # Path to WIT bindings
+path = "wit"
 
 [package.metadata.component.target.dependencies]
-"supabase:wrappers" = { path = "./supabase-wrappers-wit" } # Dependency for Supabase wrappers interface
+"supabase:wrappers" = { path = "./supabase-wrappers-wit" }
 
 [build-dependencies]
-wit-bindgen-cli = "0.26.0" # CLI for WIT code generation
+wit-bindgen-cli = "0.26.0" # WIT CLI for Wasm
+
 
