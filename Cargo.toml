@@ -1,24 +1,33 @@
 [package]
-name = "wasm_fdw_example"
-version = "0.1.0"
-edition = "2021"
+name = "square_fdw" # Name of your wrapper
+version = "0.1.0" # Initial version
+edition = "2021" # Rust edition
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib"] # Required for WebAssembly library
 
 [profile.release]
-strip = "debuginfo"
-lto = true
+strip = "debuginfo" # Strip debug info to reduce size
+lto = true # Enable Link Time Optimization for performance
 
 [dependencies]
-wit-bindgen-rt = "0.26.0"
-serde_json = "1.0"
+wit-bindgen-rt = "0.26.0" # Runtime for WebAssembly Interface Types (WIT)
+serde_json = "1.0" # JSON parsing for API response handling
+reqwest = { version = "0.11", features = ["blocking", "json"] } # HTTP client for API requests
+serde = { version = "1.0", features = ["derive"] } # For serializing/deserializing JSON
+tokio = { version = "1", features = ["full"] } # Async runtime, though `reqwest` is used in blocking mode here
+log = "0.4" # Logging for debugging purposes
+env_logger = "0.10" # Environment-based logger setup
 
 [package.metadata.component]
-package = "my-company:example-fdw"
+package = "reactix:square-fdw" # Namespaced identifier for your app
 
 [package.metadata.component.target]
-path = "wit"
+path = "wit" # Path to WIT bindings
 
 [package.metadata.component.target.dependencies]
-"supabase:wrappers" = { path = "./supabase-wrappers-wit" }
+"supabase:wrappers" = { path = "./supabase-wrappers-wit" } # Dependency for Supabase wrappers interface
+
+[build-dependencies]
+wit-bindgen-cli = "0.26.0" # CLI for WIT code generation
+
